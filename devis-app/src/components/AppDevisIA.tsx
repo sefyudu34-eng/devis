@@ -658,7 +658,7 @@ Règles importantes :
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted p-4 md:p-8">
+    <div className="app-container">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -677,7 +677,7 @@ Règles importantes :
               Clients ({clients.length})
             </Button>
             <div className="text-center flex-1">
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-3">
+              <h1 className="hero-title mb-3">
                 Générateur de Devis IA
               </h1>
               <p className="text-lg text-muted-foreground">
@@ -697,7 +697,7 @@ Règles importantes :
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="shadow-xl border-border">
+              <Card className="card-improved shadow-xl">
                 <CardHeader>
                   <CardTitle className="text-2xl text-foreground">
                     Base de Données Clients
@@ -921,7 +921,7 @@ Règles importantes :
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="shadow-xl border-border">
+              <Card className="card-improved shadow-xl">
                 <CardHeader>
                   <CardTitle className="text-2xl text-foreground">
                     Décrivez votre projet
@@ -1024,14 +1024,14 @@ Règles importantes :
                           placeholder="Ex: Je souhaite un site web vitrine pour mon restaurant avec 5 pages, design moderne, formulaire de contact et intégration Google Maps..."
                           value={textInput}
                           onChange={(e) => setTextInput(e.target.value)}
-                          className="min-h-[200px] mt-2 bg-background border-border"
+                          className="min-h-[200px] mt-2"
                           disabled={isProcessing}
                         />
                       </div>
                       <Button
                         onClick={handleTextSubmit}
                         disabled={!textInput.trim() || isProcessing}
-                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                        className="btn-primary w-full"
                         size="lg"
                       >
                         {isProcessing ? (
@@ -1121,7 +1121,7 @@ Règles importantes :
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="shadow-xl border-border">
+              <Card className="card-improved shadow-xl">
                 <CardHeader className="bg-muted/50">
                   <div className="flex justify-between items-start">
                     <div>
