@@ -137,6 +137,7 @@ export default function AppDevisIA() {
     try {
       setIsProcessing(true);
       setError("");
+      setDevis(null);
 
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -149,20 +150,20 @@ export default function AppDevisIA() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Erreur lors de la génération");
-      }
-
       const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erreur lors de la génération");
+      }
       
-      if (data.devis) {
-        setDevis(data.devis);
-      } else {
+      if (!data.devis || !Array.isArray(data.devis.items)) {
         throw new Error("Format de réponse invalide");
       }
+
+      setDevis(data.devis);
     } catch (err) {
-      console.error(err);
-      setError("Erreur lors de la génération du devis");
+      console.error("Erreur de génération:", err);
+      setError(err instanceof Error ? err.message : "Erreur lors de la génération du devis");
     } finally {
       setIsProcessing(false);
     }

@@ -10,8 +10,18 @@ export async function POST(request: Request) {
     const { prompt, client } = await request.json();
 
     const systemPrompt = `Tu es un assistant spécialisé dans la génération de devis. 
-    Utilise les informations fournies pour générer un devis détaillé.
-    Format attendu : liste d'items avec description, quantité, prix unitaire et total.`;
+    Analyse la demande et génère une liste détaillée d'items pour le devis.
+    Utilise ce format exact pour chaque item :
+    - Description: [description détaillée]
+    - Quantité: [nombre] unités
+    - Prix unitaire: [montant] €
+
+    Exemple:
+    - Description: Développement page d'accueil responsive
+    - Quantité: 1 unité
+    - Prix unitaire: 800 €
+
+    Inclus au moins 3 items pertinents et détaillés dans ta réponse.`;
 
     const userPrompt = `Générer un devis pour le client ${client?.nom || 'inconnu'} avec les détails suivants : ${prompt}`;
 
@@ -23,9 +33,48 @@ export async function POST(request: Request) {
       ]
     });
 
-    const devisContent = completion.choices[0].message.content;
+    const devisContent = completion.choices[0].message.content || '';
     
-    // Parser la réponse et créer un devis structuré
+    // Créer une structure pour analyser la réponse
+    const parsedItems = [];
+    const lines = devisContent.split('\n');
+    
+    let currentItem = null;
+    
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      
+      // Ignorer les lignes vides
+      if (!trimmedLine) continue;
+      
+      // Essayer de détecter les prix et quantités
+      const priceMatch = trimmedLine.match(/(\d+(?:\.\d{1,2})?)\s*(?:€|EUR)/);
+      const quantityMatch = trimmedLine.match(/(\d+)\s*(?:x|pcs?|unités?)/i);
+      
+      if (priceMatch || quantityMatch) {
+        // C'est probablement une ligne d'item
+        const unitPrice = priceMatch ? parseFloat(priceMatch[1]) : 0;
+        const quantity = quantityMatch ? parseInt(quantityMatch[1]) : 1;
+        const description = trimmedLine
+          .replace(/(\d+(?:\.\d{1,2})?)\s*(?:€|EUR)/g, '')
+          .replace(/(\d+)\s*(?:x|pcs?|unités?)/gi, '')
+          .trim();
+          
+        parsedItems.push({
+          description,
+          quantity,
+          unitPrice,
+          total: quantity * unitPrice
+        });
+      }
+    }
+    
+    // Calculer les totaux
+    const sousTotal = parsedItems.reduce((acc, item) => acc + item.total, 0);
+    const tva = sousTotal * 0.2; // TVA 20%
+    const total = sousTotal + tva;
+    
+    // Créer le devis structuré
     const devis = {
       id: crypto.randomUUID(),
       numero: `DEV-${Date.now()}`,
@@ -36,15 +85,12 @@ export async function POST(request: Request) {
         email: "",
         adresse: ""
       },
-      items: [],
-      sousTotal: 0,
-      tva: 0,
-      total: 0,
+      items: parsedItems,
+      sousTotal,
+      tva,
+      total,
       statut: "brouillon"
     };
-
-    // Ici, vous pouvez ajouter la logique pour parser devisContent
-    // et remplir les items du devis
 
     return NextResponse.json({ devis });
   } catch (error) {
