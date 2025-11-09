@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import AppDevisIA from '@/components/AppDevisIA';
+import AppDevisIA from '../src/components/AppDevisIAFixed';
 
 export default function Home() {
   return (
