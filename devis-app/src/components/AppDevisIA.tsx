@@ -150,119 +150,109 @@ export default function AppDevisIA() {
   return (
     <div className="app-container">
       <div className="card">
-        <div className="card-header">
-          <h1 className="card-title">Assistant de création de devis</h1>
-          <p className="card-description">
-            Générez des devis rapidement avec l'aide de l'IA
-          </p>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Assistant de création de devis</CardTitle>
+            <CardDescription>
+              Générez des devis rapidement avec l'aide de l'IA
+            </CardDescription>
+          </CardHeader>
 
-          <CardContent className="p-6 space-y-8">
+          <CardContent className="card-content">
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg text-center">
+              <div className="error-message">
                 {error}
               </div>
             )}
 
             {/* Sélection du mode */}
-            <div className="flex justify-center gap-4">
-              <Button
+            <div className="button-group">
+              <button
+                className={`mode-button ${mode === 'text' ? 'active' : ''}`}
                 onClick={() => setMode("text")}
-                variant={mode === "text" ? "default" : "outline"}
-                className={twMerge(
-                  "flex-1 max-w-[200px] transition-all duration-200",
-                  mode === "text" ? "shadow-lg" : ""
-                )}
               >
-                <MessageSquare className="w-4 h-4 mr-2" />
+                <MessageSquare className="icon" />
                 Mode Texte
-              </Button>
-              <Button
+              </button>
+              <button
+                className={`mode-button ${mode === 'voice' ? 'active' : ''}`}
                 onClick={() => setMode("voice")}
-                variant={mode === "voice" ? "default" : "outline"}
-                className={twMerge(
-                  "flex-1 max-w-[200px] transition-all duration-200",
-                  mode === "voice" ? "shadow-lg" : ""
-                )}
               >
-                <Mic className="w-4 h-4 mr-2" />
+                <Mic className="icon" />
                 Mode Vocal
-              </Button>
+              </button>
             </div>
 
             {/* Zone de saisie */}
-            <div className="flex flex-col items-center space-y-4">
+            <div className="input-container">
               {mode === "text" ? (
                 <>
-                  <Textarea
+                  <textarea
+                    className="textarea"
                     placeholder="Décrivez le devis que vous souhaitez générer..."
                     value={textInput}
                     onChange={(e) => setTextInput(e.target.value)}
-                    className="w-full min-h-[120px] text-center resize-none"
                   />
-                  <Button
+                  <button
+                    className={`button button-primary ${(!textInput.trim() || isProcessing) ? 'disabled' : ''}`}
                     onClick={() => generateDevis(textInput)}
                     disabled={!textInput.trim() || isProcessing}
-                    className="w-40 shadow-lg"
                   >
-                    <Send className="w-4 h-4 mr-2" />
+                    <Send className="icon" />
                     {isProcessing ? "Génération..." : "Générer"}
-                  </Button>
+                  </button>
                 </>
               ) : (
-                <Button
+                <button
+                  className={`button ${isRecording ? 'button-record-active' : 'button-primary'}`}
                   onClick={isRecording ? stopRecording : startRecording}
                   disabled={isProcessing}
-                  variant={isRecording ? "destructive" : "default"}
-                  className="w-60 shadow-lg"
                 >
                   {isRecording ? (
                     <>
-                      <MicOff className="w-4 h-4 mr-2" />
+                      <MicOff className="icon" />
                       Arrêter l'enregistrement
                     </>
                   ) : (
                     <>
-                      <Mic className="w-4 h-4 mr-2" />
+                      <Mic className="icon" />
                       Commencer l'enregistrement
                     </>
                   )}
-                </Button>
+                </button>
               )}
             </div>
 
             {/* Recherche de clients */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <Input
+            <div className="input-container">
+              <div className="search-bar">
+                <input
                   type="text"
+                  className="input"
                   placeholder="Rechercher un client..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1"
                 />
-                <Button
+                <button
+                  className="button button-outline"
                   onClick={() => setShowClientList(true)}
-                  variant="outline"
-                  className="shadow-sm"
                 >
-                  <FileText className="w-4 h-4" />
-                </Button>
+                  <FileText className="icon" />
+                </button>
               </div>
 
               {showClientList && (
-                <div className="mt-4 bg-white rounded-lg shadow-lg divide-y divide-gray-100">
-                  <div className="p-4 flex justify-between items-center bg-gray-50">
-                    <h3 className="font-semibold text-gray-700">Liste des clients</h3>
-                    <Button
+                <div className="client-list">
+                  <div className="client-list-header">
+                    <h3>Liste des clients</h3>
+                    <button
+                      className="button button-outline"
                       onClick={() => setShowClientList(false)}
-                      variant="ghost"
-                      size="sm"
                     >
                       ✕
-                    </Button>
+                    </button>
                   </div>
-                  <div className="max-h-60 overflow-y-auto">
+                  <div className="client-list-content">
                     {clients
                       .filter((client) =>
                         client.nom.toLowerCase().includes(searchQuery.toLowerCase())
@@ -270,15 +260,15 @@ export default function AppDevisIA() {
                       .map((client) => (
                         <div
                           key={client.id}
-                          className="p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                          className="client-item"
                           onClick={() => {
                             setSelectedClient(client);
                             setShowClientList(false);
                           }}
                         >
-                          <div className="font-medium text-gray-900">{client.nom}</div>
-                          <div className="text-sm text-gray-500">{client.email}</div>
-                          <div className="text-xs text-gray-400 mt-1">
+                          <div className="client-name">{client.nom}</div>
+                          <div className="client-email">{client.email}</div>
+                          <div className="client-stats">
                             {client.devis.length} devis, {client.factures.length} factures
                           </div>
                         </div>
@@ -288,21 +278,19 @@ export default function AppDevisIA() {
               )}
 
               {selectedClient && (
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <div className="flex justify-between items-start">
+                <div className="selected-client">
+                  <div className="selected-client-content">
                     <div>
-                      <h3 className="font-semibold text-blue-900">{selectedClient.nom}</h3>
-                      <p className="text-sm text-blue-700">{selectedClient.email}</p>
-                      <p className="text-sm text-blue-700">{selectedClient.adresse}</p>
+                      <h3 className="client-name">{selectedClient.nom}</h3>
+                      <p className="client-email">{selectedClient.email}</p>
+                      <p className="client-address">{selectedClient.adresse}</p>
                     </div>
-                    <Button
+                    <button
+                      className="button button-outline"
                       onClick={() => setSelectedClient(null)}
-                      variant="ghost"
-                      size="sm"
-                      className="text-blue-700 hover:text-blue-800"
                     >
                       ✕
-                    </Button>
+                    </button>
                   </div>
                 </div>
               )}
