@@ -124,7 +124,8 @@
 /* App-level component styles to make the UI look nicer */
 @layer components {
   .app-container {
-    @apply min-h-screen bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 p-6 text-center;
+    @apply min-h-screen bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 p-6;
+    text-align: left;
   }
 
   .hero-title {
@@ -133,10 +134,10 @@
 
   .card-improved {
     @apply bg-white dark:bg-slate-800 shadow-xl rounded-xl border border-gray-200 dark:border-slate-700 p-6;
-  }
-
-  /* Extra spacing and layout polish for the homepage card and form */
-  .card-improved {
+    /* center cards and constrain width for a consistent layout */
+    max-width: 980px;
+    margin-left: auto;
+    margin-right: auto;
     margin-top: 28px;
     padding: 28px;
     box-shadow: 0 20px 40px rgba(2,6,23,0.06);
@@ -150,6 +151,15 @@
     line-height: 1.05;
   }
 
+  /* Ensure form labels and small texts are left-aligned inside cards */
+  .card-improved label,
+  .card-improved .text-foreground,
+  .card-improved .card-description,
+  .card-improved p,
+  .card-improved .text-sm {
+    text-align: left;
+  }
+
   /* Make the mode buttons consistent and nicely spaced */
   .card-improved .flex.gap-3.justify-center > button {
     min-width: 160px;
@@ -158,11 +168,26 @@
     font-weight: 600;
   }
 
+  /* Make sure the mode buttons group is centered visually */
+  .mode-buttons-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
   /* Improve textarea/input spacing and make them full width */
   textarea, input {
     @apply bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-300;
     width: 100%;
     box-sizing: border-box;
+  }
+
+  /* Label styling for better hierarchy */
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: rgba(17,24,39,0.9);
   }
 
   /* Primary action styling (generate button) */
@@ -173,6 +198,21 @@
     border-radius: 10px;
     box-shadow: 0 8px 24px rgba(14,165,233,0.12);
     font-weight: 700;
+  }
+
+  /* Small tweaks for left sidebar elements (logo + client button) */
+  .app-container > .max-w-6xl > .text-center .btn-primary.inline-flex {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Responsive: stack nicely on small screens */
+  @media (max-width: 900px) {
+    .card-improved { padding: 18px; margin-top: 18px; }
+    .card-improved { max-width: 100%; }
+    .mode-buttons-wrapper { flex-direction: column; gap: 8px; }
+    .btn-primary { width: 100%; }
   }
 
   .btn-primary {
