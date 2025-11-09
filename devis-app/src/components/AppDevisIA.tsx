@@ -440,12 +440,6 @@ export default function AppDevisIA() {
               )}
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-        </Card>
-      </div>
     </div>
   );
 }
