@@ -138,9 +138,30 @@ export default function AppDevisIA() {
       setIsProcessing(true);
       setError("");
 
-      // TODO: Implémenter la génération du devis
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt,
+          client: selectedClient
+        }),
+      });
 
+      if (!response.ok) {
+        throw new Error("Erreur lors de la génération");
+      }
+
+      const data = await response.json();
+      
+      if (data.devis) {
+        setDevis(data.devis);
+      } else {
+        throw new Error("Format de réponse invalide");
+      }
     } catch (err) {
+      console.error(err);
       setError("Erreur lors de la génération du devis");
     } finally {
       setIsProcessing(false);
@@ -440,6 +461,139 @@ export default function AppDevisIA() {
                 </div>
               )}
             </div>
+
+            {/* Affichage du devis généré */}
+            {devis && (
+              <div style={{
+                marginTop: '24px',
+                padding: '16px',
+                backgroundColor: '#f8fafc',
+                borderRadius: '8px',
+                border: '1px solid #e5e7eb'
+              }}>
+                <div style={{
+                  marginBottom: '16px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}>
+                  <h3 style={{ fontWeight: '600', color: '#1f2937' }}>Devis #{devis.numero}</h3>
+                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
+                    {new Date(devis.date).toLocaleDateString()}
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '16px' }}>
+                  <h4 style={{ fontWeight: '500', color: '#4b5563', marginBottom: '8px' }}>Client</h4>
+                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
+                    <p>{devis.client.nom}</p>
+                    {devis.client.email && <p>{devis.client.email}</p>}
+                    {devis.client.adresse && <p>{devis.client.adresse}</p>}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 style={{ fontWeight: '500', color: '#4b5563', marginBottom: '8px' }}>Articles</h4>
+                  <div style={{ borderTop: '1px solid #e5e7eb' }}>
+                    {devis.items.map((item, index) => (
+                      <div key={index} style={{
+                        padding: '12px 0',
+                        borderBottom: '1px solid #e5e7eb',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'start'
+                      }}>
+                        <div style={{ flex: '1' }}>
+                          <div style={{ fontWeight: '500', color: '#1f2937' }}>{item.description}</div>
+                          <div style={{ fontSize: '14px', color: '#6b7280' }}>
+                            {item.quantity} x {item.unitPrice.toFixed(2)} €
+                          </div>
+                        </div>
+                        <div style={{ fontWeight: '500', color: '#1f2937' }}>
+                          {item.total.toFixed(2)} €
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{
+                  marginTop: '16px',
+                  paddingTop: '16px',
+                  borderTop: '2px solid #e5e7eb'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '8px'
+                  }}>
+                    <div style={{ color: '#6b7280' }}>Sous-total</div>
+                    <div style={{ color: '#1f2937' }}>{devis.sousTotal.toFixed(2)} €</div>
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '8px'
+                  }}>
+                    <div style={{ color: '#6b7280' }}>TVA (20%)</div>
+                    <div style={{ color: '#1f2937' }}>{devis.tva.toFixed(2)} €</div>
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginTop: '8px',
+                    paddingTop: '8px',
+                    borderTop: '1px solid #e5e7eb',
+                    fontWeight: '600'
+                  }}>
+                    <div>Total</div>
+                    <div>{devis.total.toFixed(2)} €</div>
+                  </div>
+                </div>
+
+                <div style={{
+                  marginTop: '24px',
+                  display: 'flex',
+                  gap: '8px',
+                  justifyContent: 'flex-end'
+                }}>
+                  <button
+                    onClick={() => window.print()}
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: 'white',
+                      color: '#2563eb',
+                      border: '1px solid #2563eb',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Download size={16} />
+                    Télécharger
+                  </button>
+                  <button
+                    onClick={() => setDevis(null)}
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: '#2563eb',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Edit size={16} />
+                    Modifier
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </Card>
       </div>
