@@ -397,7 +397,9 @@ Règles importantes :
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
           @page { margin: 20mm; }
+          /* TEST: red background to verify visual change as requested */
           body { 
+            background: red;
             font-family: Arial, sans-serif; 
             padding: 10px;
             font-size: 9pt;
@@ -545,8 +547,9 @@ Règles importantes :
         <table style="width: 100%; margin-bottom: 20px; border: none;">
           <tr>
             <td style="width: 30%; vertical-align: top; border: none;">
-              <img src="https://placehold.co/100x80?text=ABELLO+LOGO" alt="Logo Abello showing blue house icon with company branding" style="display: block; margin-bottom: 5px;">
-              <img src="https://placehold.co/100x80?text=RGE+QUALIBAT" alt="RGE Qualibat certification logo with blue accreditation badge" style="display: block; margin-bottom: 10px;">
+              <!-- Replace these with your real logos placed in public/images/ -->
+              <img src="/images/sarldouz.png" alt="SARL DOUZ logo" style="display: block; margin-bottom: 5px; max-width:100px; height:auto;">
+              <img src="/images/qualibat.png" alt="RGE Qualibat logo" style="display: block; margin-bottom: 10px; max-width:100px; height:auto;">
               <div style="font-size: 8pt; color: #0066cc; line-height: 1.3;">
                 <strong>3 rue Pierre Séguier 34500 Béziers</strong><br>
                 <span style="color: #000;">Port : 06 63 52 57 06</span><br>
