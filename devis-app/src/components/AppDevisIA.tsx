@@ -664,14 +664,29 @@ Règles importantes :
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: [...chatMessages, newUser] }),
       });
-
+      let data: any = null;
       if (!resp.ok) {
-        const err = await resp.json();
-        throw new Error(err?.error || 'OpenAI proxy error');
+        // try parse json, otherwise text
+        try {
+          const errObj = await resp.json();
+          throw new Error(errObj?.error || JSON.stringify(errObj));
+        } catch (eJson) {
+          const txt = await resp.text();
+          throw new Error(txt || `OpenAI proxy returned status ${resp.status}`);
+        }
+      } else {
+        try {
+          data = await resp.json();
+        } catch (e) {
+          const raw = await resp.text();
+          // show raw response as error message
+          setChatMessages(prev => [...prev, { role: 'assistant', content: 'Erreur: réponse non JSON du serveur: ' + raw }]);
+          setChatLoading(false);
+          return;
+        }
       }
 
-      const data = await resp.json();
-      const assistant = data?.choices?.[0]?.message?.content || data?.choices?.[0]?.text || '';
+      const assistant = data?.choices?.[0]?.message?.content || data?.choices?.[0]?.text || data?.text || '';
       if (assistant) {
         setChatMessages(prev => [...prev, { role: 'assistant', content: assistant }]);
       } else if (data?.error) {

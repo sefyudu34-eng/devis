@@ -24,9 +24,25 @@ export async function POST(req: Request) {
       }),
     });
 
-    const data = await resp.json();
+    // If OpenAI returned a non-OK status, try to extract text for debugging
+    if (!resp.ok) {
+      let textBody = '';
+      try {
+        textBody = await resp.text();
+      } catch (e) {
+        textBody = `OpenAI returned status ${resp.status}`;
+      }
+      return NextResponse.json({ error: textBody || `OpenAI returned status ${resp.status}` }, { status: resp.status });
+    }
 
-    return NextResponse.json(data);
+    // Attempt to parse JSON, but handle cases where response may be empty or non-json
+    try {
+      const data = await resp.json();
+      return NextResponse.json(data);
+    } catch (parseErr) {
+      const raw = await resp.text();
+      return NextResponse.json({ error: 'Failed to parse OpenAI response as JSON', raw }, { status: 502 });
+    }
   } catch (err: any) {
     return NextResponse.json({ error: err.message || String(err) }, { status: 500 });
   }
