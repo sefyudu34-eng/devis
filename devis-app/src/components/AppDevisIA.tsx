@@ -713,20 +713,18 @@ Règles importantes :
           transition={{ duration: 0.5 }}
           className="text-center mb-8"
         >
-          <div className="flex items-center justify-between w-full max-w-6xl mx-auto">
-            <button
-              onClick={() => setShowClientList(!showClientList)}
-              className="btn-primary inline-flex items-center px-4 py-2 rounded-lg"
-              aria-label="Clients"
-            >
-              <FileText className="mr-2 h-5 w-5" />
-              Clients ({clients.length})
-            </button>
+          <div className="flex items-center justify-between w-full max-w-6xl mx-auto gap-6">
+            <div className="flex items-center gap-4">
+              <img src="/images/sarldouz.png" alt="SARL DOUZ" className="h-14 w-auto rounded-md shadow-sm" />
+              <div className="hidden sm:block">
+                <div className="text-sm text-muted-foreground">Entreprise</div>
+                <div className="font-semibold">SARL DOUZ</div>
+              </div>
+            </div>
 
-            <div className="text-center flex-1">
-              <div className="inline-block bg-white dark:bg-slate-900 rounded-xl px-6 py-4 shadow-md">
-                <div className="flex items-center gap-4">
-                  <img src="/images/sarldouz.png" alt="logo" className="h-12 w-auto hidden sm:block" />
+            <div className="flex-1">
+              <div className="mx-auto inline-block bg-white dark:bg-slate-900 rounded-2xl px-8 py-6 shadow-2xl">
+                <div className="flex items-center gap-6">
                   <div>
                     <h1 className="hero-title mb-1 text-4xl md:text-5xl">
                       Générateur de Devis IA
@@ -735,11 +733,21 @@ Règles importantes :
                       Créez des devis professionnels en parlant ou en écrivant
                     </p>
                   </div>
+                  <img src="/images/qualibat.png" alt="QUALIBAT" className="h-16 w-auto hidden md:block" />
                 </div>
               </div>
             </div>
 
-            <div className="w-40"></div>
+            <div>
+              <button
+                onClick={() => setShowClientList(!showClientList)}
+                className="btn-primary inline-flex items-center px-4 py-2 rounded-lg"
+                aria-label="Clients"
+              >
+                <FileText className="mr-2 h-5 w-5" />
+                Clients ({clients.length})
+              </button>
+            </div>
           </div>
         </motion.div>
 
