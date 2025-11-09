@@ -135,6 +135,46 @@
     @apply bg-white dark:bg-slate-800 shadow-xl rounded-xl border border-gray-200 dark:border-slate-700 p-6;
   }
 
+  /* Extra spacing and layout polish for the homepage card and form */
+  .card-improved {
+    margin-top: 28px;
+    padding: 28px;
+    box-shadow: 0 20px 40px rgba(2,6,23,0.06);
+  }
+
+  .card-improved .text-2xl,
+  .card-improved .card-title,
+  .card-improved h2,
+  .card-improved h3 {
+    margin-bottom: 12px;
+    line-height: 1.05;
+  }
+
+  /* Make the mode buttons consistent and nicely spaced */
+  .card-improved .flex.gap-3.justify-center > button {
+    min-width: 160px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  /* Improve textarea/input spacing and make them full width */
+  textarea, input {
+    @apply bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-300;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Primary action styling (generate button) */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400;
+    width: 100%;
+    padding: 12px 18px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(14,165,233,0.12);
+    font-weight: 700;
+  }
+
   .btn-primary {
     @apply inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400;
   }
