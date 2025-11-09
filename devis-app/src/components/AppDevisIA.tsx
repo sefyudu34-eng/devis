@@ -715,7 +715,7 @@ Règles importantes :
         >
           <div className="flex items-center justify-between w-full max-w-6xl mx-auto gap-6">
             <div className="flex items-center gap-4">
-              <img src="/images/sarldouz.png" alt="SARL DOUZ" className="h-14 w-auto rounded-md shadow-sm" />
+              <img src="/images/sarldouz.png" alt="SARL DOUZ" className="h-14 w-auto rounded-md shadow-sm" style={{height: 110, width: 'auto'}} />
               <div className="hidden sm:block">
                 <div className="text-sm text-muted-foreground">Entreprise</div>
                 <div className="font-semibold">SARL DOUZ</div>
@@ -1032,14 +1032,30 @@ Règles importantes :
                   <div className="flex gap-3 justify-center">
                     <Button
                       onClick={() => setMode("text")}
-                      className={`flex-1 max-w-xs ${mode === "text" ? 'btn-primary' : 'bg-white border border-gray-200'}`}
+                      className={`flex-1 max-w-xs`}
+                      style={{
+                        background: mode === 'text' ? '#0ea5e9' : '#ffffff',
+                        color: mode === 'text' ? '#ffffff' : '#111827',
+                        padding: '12px 18px',
+                        borderRadius: 10,
+                        border: '1px solid #e5e7eb',
+                        boxShadow: mode === 'text' ? '0 6px 16px rgba(14,165,233,0.18)' : 'none'
+                      }}
                     >
                       <FileText className="mr-2 h-4 w-4" />
                       Mode Texte
                     </Button>
                     <Button
                       onClick={() => setMode("voice")}
-                      className={`flex-1 max-w-xs ${mode === "voice" ? 'btn-primary' : 'bg-white border border-gray-200'}`}
+                      className={`flex-1 max-w-xs`}
+                      style={{
+                        background: mode === 'voice' ? '#0ea5e9' : '#ffffff',
+                        color: mode === 'voice' ? '#ffffff' : '#111827',
+                        padding: '12px 18px',
+                        borderRadius: 10,
+                        border: '1px solid #e5e7eb',
+                        boxShadow: mode === 'voice' ? '0 6px 16px rgba(14,165,233,0.18)' : 'none'
+                      }}
                     >
                       <Mic className="mr-2 h-4 w-4" />
                       Mode Vocal
@@ -1053,7 +1069,15 @@ Règles importantes :
                           setConversationStatus("idle");
                         }
                       }}
-                      className={`flex-1 max-w-xs ${conversationMode ? 'btn-primary' : 'bg-white border border-gray-200'}`}
+                      className={`flex-1 max-w-xs`}
+                      style={{
+                        background: conversationMode ? '#0ea5e9' : '#ffffff',
+                        color: conversationMode ? '#ffffff' : '#111827',
+                        padding: '12px 18px',
+                        borderRadius: 10,
+                        border: '1px solid #e5e7eb',
+                        boxShadow: conversationMode ? '0 6px 16px rgba(14,165,233,0.18)' : 'none'
+                      }}
                     >
                       <MessageSquare className="mr-2 h-4 w-4" />
                       Agent IA
@@ -1128,6 +1152,14 @@ Règles importantes :
                         disabled={!textInput.trim() || isProcessing}
                         className="btn-primary w-full"
                         size="lg"
+                        style={{
+                          background: '#0ea5e9',
+                          color: '#fff',
+                          padding: '12px 18px',
+                          borderRadius: 10,
+                          fontWeight: 700,
+                          boxShadow: '0 8px 24px rgba(14,165,233,0.18)'
+                        }}
                       >
                         {isProcessing ? (
                           <>
