@@ -933,23 +933,20 @@ Règles importantes :
                 <CardContent className="space-y-6">
                   <div className="flex gap-3 justify-center">
                     <Button
-                      variant={mode === "text" ? "default" : "outline"}
                       onClick={() => setMode("text")}
-                      className="flex-1 max-w-xs"
+                      className={`flex-1 max-w-xs ${mode === "text" ? 'btn-primary' : 'bg-white border border-gray-200'}`}
                     >
                       <FileText className="mr-2 h-4 w-4" />
                       Mode Texte
                     </Button>
                     <Button
-                      variant={mode === "voice" ? "default" : "outline"}
                       onClick={() => setMode("voice")}
-                      className="flex-1 max-w-xs"
+                      className={`flex-1 max-w-xs ${mode === "voice" ? 'btn-primary' : 'bg-white border border-gray-200'}`}
                     >
                       <Mic className="mr-2 h-4 w-4" />
                       Mode Vocal
                     </Button>
                     <Button
-                      variant={conversationMode ? "default" : "outline"}
                       onClick={() => {
                         if (!conversationMode) {
                           startConversationalAgent();
@@ -958,7 +955,7 @@ Règles importantes :
                           setConversationStatus("idle");
                         }
                       }}
-                      className="flex-1 max-w-xs"
+                      className={`flex-1 max-w-xs ${conversationMode ? 'btn-primary' : 'bg-white border border-gray-200'}`}
                     >
                       <MessageSquare className="mr-2 h-4 w-4" />
                       Agent IA
