@@ -160,24 +160,25 @@ export default function AppDevisIA() {
         borderRadius: '12px',
         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
       }}>
-        <div style={{
-          padding: '24px',
-          textAlign: 'center',
-          background: 'linear-gradient(to right, #2563eb, #1d4ed8)',
-          borderTopLeftRadius: '12px',
-          borderTopRightRadius: '12px',
-          color: 'white'
-        }}>
-          <h1 style={{
-            fontSize: '24px',
-            fontWeight: 'bold',
-            marginBottom: '8px'
-          }}>Assistant de création de devis</h1>
-          <p style={{
-            fontSize: '16px',
-            opacity: '0.9'
-          }}>Générez des devis rapidement avec l'aide de l'IA</p>
-        </div>
+        <Card>
+          <div style={{
+            padding: '24px',
+            textAlign: 'center',
+            background: 'linear-gradient(to right, #2563eb, #1d4ed8)',
+            borderTopLeftRadius: '12px',
+            borderTopRightRadius: '12px',
+            color: 'white'
+          }}>
+            <h1 style={{
+              fontSize: '24px',
+              fontWeight: 'bold',
+              marginBottom: '8px'
+            }}>Assistant de création de devis</h1>
+            <p style={{
+              fontSize: '16px',
+              opacity: '0.9'
+            }}>Générez des devis rapidement avec l'aide de l'IA</p>
+          </div>
 
           <div style={{ padding: '24px' }}>
             {error && (
