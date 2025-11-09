@@ -148,111 +148,116 @@ export default function AppDevisIA() {
   };
 
   return (
-    <div className="app-container">
-      <div className="card">
-        <Card>
-          <CardHeader>
-            <CardTitle>Assistant de création de devis</CardTitle>
-            <CardDescription>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white p-6">
+      <div className="max-w-4xl mx-auto">
+        <Card className="shadow-lg">
+          <CardHeader className="text-center border-b pb-4 bg-gradient-to-r from-blue-600 to-blue-700">
+            <CardTitle className="text-2xl font-bold text-white mb-2">Assistant de création de devis</CardTitle>
+            <CardDescription className="text-lg text-slate-100">
               Générez des devis rapidement avec l'aide de l'IA
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="card-content">
+          <CardContent className="p-6 space-y-6">
             {error && (
-              <div className="error-message">
+              <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg text-center">
                 {error}
               </div>
             )}
 
             {/* Sélection du mode */}
-            <div className="button-group">
-              <button
-                className={`mode-button ${mode === 'text' ? 'active' : ''}`}
+            <div className="flex justify-center gap-4">
+              <Button
                 onClick={() => setMode("text")}
+                variant={mode === "text" ? "default" : "outline"}
+                className="flex-1 max-w-[200px]"
               >
-                <MessageSquare className="icon" />
+                <MessageSquare className="w-4 h-4 mr-2" />
                 Mode Texte
-              </button>
-              <button
-                className={`mode-button ${mode === 'voice' ? 'active' : ''}`}
+              </Button>
+              <Button
                 onClick={() => setMode("voice")}
+                variant={mode === "voice" ? "default" : "outline"}
+                className="flex-1 max-w-[200px]"
               >
-                <Mic className="icon" />
+                <Mic className="w-4 h-4 mr-2" />
                 Mode Vocal
-              </button>
+              </Button>
             </div>
 
             {/* Zone de saisie */}
-            <div className="input-container">
+            <div className="space-y-4">
               {mode === "text" ? (
                 <>
-                  <textarea
-                    className="textarea"
+                  <Textarea
                     placeholder="Décrivez le devis que vous souhaitez générer..."
                     value={textInput}
                     onChange={(e) => setTextInput(e.target.value)}
+                    className="min-h-[120px] text-center resize-none"
                   />
-                  <button
-                    className={`button button-primary ${(!textInput.trim() || isProcessing) ? 'disabled' : ''}`}
+                  <Button
                     onClick={() => generateDevis(textInput)}
                     disabled={!textInput.trim() || isProcessing}
+                    className="w-full"
                   >
-                    <Send className="icon" />
+                    <Send className="w-4 h-4 mr-2" />
                     {isProcessing ? "Génération..." : "Générer"}
-                  </button>
+                  </Button>
                 </>
               ) : (
-                <button
-                  className={`button ${isRecording ? 'button-record-active' : 'button-primary'}`}
+                <Button
                   onClick={isRecording ? stopRecording : startRecording}
                   disabled={isProcessing}
+                  variant={isRecording ? "destructive" : "default"}
+                  className="w-full"
                 >
                   {isRecording ? (
                     <>
-                      <MicOff className="icon" />
+                      <MicOff className="w-4 h-4 mr-2" />
                       Arrêter l'enregistrement
                     </>
                   ) : (
                     <>
-                      <Mic className="icon" />
+                      <Mic className="w-4 h-4 mr-2" />
                       Commencer l'enregistrement
                     </>
                   )}
-                </button>
+                </Button>
               )}
             </div>
 
             {/* Recherche de clients */}
-            <div className="input-container">
-              <div className="search-bar">
-                <input
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <Input
                   type="text"
-                  className="input"
                   placeholder="Rechercher un client..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1"
                 />
-                <button
-                  className="button button-outline"
+                <Button
                   onClick={() => setShowClientList(true)}
+                  variant="outline"
+                  size="icon"
                 >
-                  <FileText className="icon" />
-                </button>
+                  <FileText className="w-4 h-4" />
+                </Button>
               </div>
 
               {showClientList && (
-                <div className="client-list">
-                  <div className="client-list-header">
-                    <h3>Liste des clients</h3>
-                    <button
-                      className="button button-outline"
+                <div className="mt-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+                  <div className="p-4 flex justify-between items-center bg-gray-50 border-b border-gray-200">
+                    <h3 className="font-semibold text-gray-900">Liste des clients</h3>
+                    <Button
                       onClick={() => setShowClientList(false)}
+                      variant="ghost"
+                      size="icon"
                     >
                       ✕
-                    </button>
+                    </Button>
                   </div>
-                  <div className="client-list-content">
+                  <div className="max-h-[300px] overflow-y-auto">
                     {clients
                       .filter((client) =>
                         client.nom.toLowerCase().includes(searchQuery.toLowerCase())
@@ -260,15 +265,15 @@ export default function AppDevisIA() {
                       .map((client) => (
                         <div
                           key={client.id}
-                          className="client-item"
+                          className="p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-none"
                           onClick={() => {
                             setSelectedClient(client);
                             setShowClientList(false);
                           }}
                         >
-                          <div className="client-name">{client.nom}</div>
-                          <div className="client-email">{client.email}</div>
-                          <div className="client-stats">
+                          <div className="font-medium text-gray-900">{client.nom}</div>
+                          <div className="text-sm text-gray-500">{client.email}</div>
+                          <div className="text-xs text-gray-400 mt-1">
                             {client.devis.length} devis, {client.factures.length} factures
                           </div>
                         </div>
@@ -278,19 +283,21 @@ export default function AppDevisIA() {
               )}
 
               {selectedClient && (
-                <div className="selected-client">
-                  <div className="selected-client-content">
+                <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="client-name">{selectedClient.nom}</h3>
-                      <p className="client-email">{selectedClient.email}</p>
-                      <p className="client-address">{selectedClient.adresse}</p>
+                      <h3 className="font-semibold text-blue-900">{selectedClient.nom}</h3>
+                      <p className="text-sm text-blue-700">{selectedClient.email}</p>
+                      <p className="text-sm text-blue-700 mt-1">{selectedClient.adresse}</p>
                     </div>
-                    <button
-                      className="button button-outline"
+                    <Button
                       onClick={() => setSelectedClient(null)}
+                      variant="ghost"
+                      size="icon"
+                      className="text-blue-700 hover:text-blue-800"
                     >
                       ✕
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
