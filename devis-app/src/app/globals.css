@@ -227,3 +227,83 @@
     @apply border border-black p-2 text-xs;
   }
 }
+
+/* ---------- Global explicit UI reset for buttons and form controls ---------- */
+/* Use explicit CSS properties (not @apply) so rules apply regardless of Tailwind build */
+button, .btn-primary, input[type="button"], input[type="submit"], .card-improved button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #06a6e3; /* bright blue */
+  color: #ffffff;
+  border: 0;
+  padding: 10px 16px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(6,166,227,0.12);
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+button:hover, .btn-primary:hover, .card-improved button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(6,166,227,0.16);
+  background: #05a0d8;
+}
+
+button:active, .btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 18px rgba(6,166,227,0.10);
+}
+
+/* Inputs and textarea consistent styling */
+input[type="text"], input[type="search"], input[type="email"], input[type="tel"], textarea, select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(15,23,42,0.08);
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+  font-size: 15px;
+  line-height: 1.4;
+  transition: box-shadow 120ms ease, border-color 120ms ease;
+}
+
+textarea { min-height: 220px; }
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: rgba(6,166,227,0.9);
+  box-shadow: 0 6px 20px rgba(6,166,227,0.08);
+}
+
+/* Make primary button variant slightly larger where used */
+.btn-primary {
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 14px;
+}
+
+/* Specific: mode button group inside cards */
+.mode-buttons-wrapper > button, .card-improved .flex.gap-3.justify-center > button {
+  min-width: 160px;
+  padding: 10px 14px;
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid rgba(15,23,42,0.06);
+}
+.mode-buttons-wrapper > button:hover { background: #f8fdff; }
+
+/* keep consistent disabled look */
+button[disabled], .btn-primary[disabled], input[disabled], textarea[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* small helpers */
+.centered-action { display:flex; justify-content:center; }
+
