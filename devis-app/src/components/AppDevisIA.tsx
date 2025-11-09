@@ -1137,9 +1137,10 @@ Règles importantes :
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       className="space-y-4"
+                      style={{ maxWidth: 820, margin: '0 auto' }}
                     >
                       <div>
-                        <Label htmlFor="description" className="text-foreground">
+                        <Label htmlFor="description" className="text-foreground" style={{ display: 'block', marginBottom: 8, fontWeight: 600 }}>
                           Description du projet
                         </Label>
                         <Textarea
@@ -1149,22 +1150,27 @@ Règles importantes :
                           onChange={(e) => setTextInput(e.target.value)}
                           className="min-h-[200px] mt-2"
                           disabled={isProcessing}
+                          style={{ width: '100%', minHeight: 220, padding: 14, borderRadius: 10, boxSizing: 'border-box' }}
                         />
                       </div>
-                      <Button
-                        onClick={handleTextSubmit}
-                        disabled={!textInput.trim() || isProcessing}
-                        className="btn-primary w-full"
-                        size="lg"
-                        style={{
-                          background: '#0ea5e9',
-                          color: '#fff',
-                          padding: '12px 18px',
-                          borderRadius: 10,
-                          fontWeight: 700,
-                          boxShadow: '0 8px 24px rgba(14,165,233,0.18)'
-                        }}
-                      >
+                      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 18 }}>
+                        <Button
+                          onClick={handleTextSubmit}
+                          disabled={!textInput.trim() || isProcessing}
+                          size="lg"
+                          style={{
+                            background: '#0ea5e9',
+                            color: '#fff',
+                            padding: '12px 18px',
+                            borderRadius: 12,
+                            fontWeight: 700,
+                            boxShadow: '0 8px 24px rgba(14,165,233,0.18)',
+                            width: 320,
+                            display: 'inline-flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                          }}
+                        >
                         {isProcessing ? (
                           <>
                             <div className="animate-spin mr-2 h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
@@ -1176,7 +1182,8 @@ Règles importantes :
                             Générer le devis
                           </>
                         )}
-                      </Button>
+                        </Button>
+                      </div>
                     </motion.div>
                   ) : (
                     <motion.div
