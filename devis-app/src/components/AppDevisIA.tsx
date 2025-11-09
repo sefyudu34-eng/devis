@@ -164,17 +164,11 @@ export default function AppDevisIA() {
       formData.append("file", audioBlob, "audio.wav");
       formData.append("model_id", "scribe_v1");
 
-      const sttResponse = await fetch(
-        "https://elevenlabs-proxy-server-lipn.onrender.com/v1/speech-to-text",
-        {
-          method: "POST",
-          headers: {
-            customerId: "cus_TNfmYissyU6g42",
-            Authorization: "Bearer xxx",
-          },
-          body: formData,
-        }
-      );
+      // Send audio to our server-side proxy which forwards the request to ElevenLabs
+      const sttResponse = await fetch("/api/elevenlabs", {
+        method: "POST",
+        body: formData,
+      });
 
       if (!sttResponse.ok) {
         throw new Error("Erreur lors de la transcription audio");
@@ -359,17 +353,11 @@ Règles importantes :
       formData.append("file", audioBlob, "audio.wav");
       formData.append("model_id", "scribe_v1");
 
-      const sttResponse = await fetch(
-        "https://elevenlabs-proxy-server-lipn.onrender.com/v1/speech-to-text",
-        {
-          method: "POST",
-          headers: {
-            customerId: "cus_TNfmYissyU6g42",
-            Authorization: "Bearer xxx",
-          },
-          body: formData,
-        }
-      );
+      // Use our server proxy for voice search as well
+      const sttResponse = await fetch("/api/elevenlabs", {
+        method: "POST",
+        body: formData,
+      });
 
       if (!sttResponse.ok) {
         throw new Error("Erreur lors de la transcription audio");

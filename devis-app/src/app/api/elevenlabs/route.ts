@@ -12,21 +12,25 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = await request.arrayBuffer();
-    const headers = new Headers();
-    headers.set('Authorization', `Bearer ${apiKey}`);
+    // Preserve the incoming Content-Type (multipart boundary) when forwarding.
+    const incomingContentType = request.headers.get('content-type') || undefined;
+    const bodyBuffer = await request.arrayBuffer();
 
-    // forward the raw body to the configured endpoint
+    const forwardHeaders: Record<string, string> = {
+      Authorization: `Bearer ${apiKey}`,
+    };
+    if (incomingContentType) forwardHeaders['content-type'] = incomingContentType;
+
     const res = await fetch(endpoint, {
       method: 'POST',
-      headers,
-      body,
+      headers: forwardHeaders,
+      body: bodyBuffer,
     });
 
-    const text = await res.text();
-    const contentType = res.headers.get('content-type') || 'text/plain';
+    const respBuffer = await res.arrayBuffer();
+    const contentType = res.headers.get('content-type') || 'application/octet-stream';
 
-    return new NextResponse(text, { status: res.status, headers: { 'content-type': contentType } });
+    return new NextResponse(respBuffer, { status: res.status, headers: { 'content-type': contentType } });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || String(err) }, { status: 500 });
   }
