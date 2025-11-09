@@ -392,18 +392,21 @@ Règles importantes :
 
     const printWindow = window.open("", "", "height=800,width=800");
     if (printWindow) {
+      // Use absolute URLs for images so they load correctly in the new window
+      const origin = window.location.origin;
+
       printWindow.document.write("<html><head><title>" + (devis.type === "facture" ? "Facture" : "Devis") + "</title>");
       printWindow.document.write(`
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
           @page { margin: 20mm; }
-          /* TEST: red background to verify visual change as requested */
           body { 
-            background: red;
             font-family: Arial, sans-serif; 
             padding: 10px;
             font-size: 9pt;
             line-height: 1.2;
+            background: white;
+            color: #000;
           }
           .page-header {
             display: flex;
@@ -542,14 +545,13 @@ Règles importantes :
       `);
       printWindow.document.write("</head><body>");
       
-      // En-tête de page EXACT
+      // En-tête de page EXACT (use absolute URLs)
       printWindow.document.write(`
         <table style="width: 100%; margin-bottom: 20px; border: none;">
           <tr>
             <td style="width: 30%; vertical-align: top; border: none;">
-              <!-- Replace these with your real logos placed in public/images/ -->
-              <img src="/images/sarldouz.png" alt="SARL DOUZ logo" style="display: block; margin-bottom: 5px; max-width:100px; height:auto;">
-              <img src="/images/qualibat.png" alt="RGE Qualibat logo" style="display: block; margin-bottom: 10px; max-width:100px; height:auto;">
+              <img src="${origin}/images/sarldouz.png" alt="SARL DOUZ logo" style="display: block; margin-bottom: 5px; max-width:100px; height:auto;">
+              <img src="${origin}/images/qualibat.png" alt="RGE Qualibat logo" style="display: block; margin-bottom: 10px; max-width:100px; height:auto;">
               <div style="font-size: 8pt; color: #0066cc; line-height: 1.3;">
                 <strong>3 rue Pierre Séguier 34500 Béziers</strong><br>
                 <span style="color: #000;">Port : 06 63 52 57 06</span><br>
@@ -712,23 +714,31 @@ Règles importantes :
           className="text-center mb-8"
         >
           <div className="flex items-center justify-between w-full max-w-6xl mx-auto">
-            <Button
+            <button
               onClick={() => setShowClientList(!showClientList)}
-              variant="outline"
-              size="lg"
-              className="border-border"
+              className="btn-primary inline-flex items-center px-4 py-2 rounded-lg"
+              aria-label="Clients"
             >
               <FileText className="mr-2 h-5 w-5" />
               Clients ({clients.length})
-            </Button>
+            </button>
+
             <div className="text-center flex-1">
-              <h1 className="hero-title mb-3">
-                Générateur de Devis IA
-              </h1>
-              <p className="text-lg text-muted-foreground">
-                Créez des devis professionnels en parlant ou en écrivant
-              </p>
+              <div className="inline-block bg-white dark:bg-slate-900 rounded-xl px-6 py-4 shadow-md">
+                <div className="flex items-center gap-4">
+                  <img src="/images/sarldouz.png" alt="logo" className="h-12 w-auto hidden sm:block" />
+                  <div>
+                    <h1 className="hero-title mb-1 text-4xl md:text-5xl">
+                      Générateur de Devis IA
+                    </h1>
+                    <p className="text-sm md:text-base text-muted-foreground">
+                      Créez des devis professionnels en parlant ou en écrivant
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
+
             <div className="w-40"></div>
           </div>
         </motion.div>
