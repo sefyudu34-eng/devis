@@ -59,6 +59,10 @@ export default function AppDevisIA() {
   const [transcript, setTranscript] = useState<string[]>([]);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  // ChatGPT integration (client-side state)
+  const [chatMessages, setChatMessages] = useState<{ role: string; content: string }[]>([]);
+  const [chatInput, setChatInput] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
 
   React.useEffect(() => {
     const savedClients = localStorage.getItem('clients');
@@ -645,6 +649,41 @@ Règles importantes :
     }
   };
 
+  // Send chat message to server proxy which forwards to OpenAI
+  const sendChatMessage = async () => {
+    const content = chatInput.trim();
+    if (!content) return;
+    const newUser = { role: 'user', content };
+    setChatMessages(prev => [...prev, newUser]);
+    setChatInput('');
+    setChatLoading(true);
+
+    try {
+      const resp = await fetch('/api/openai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [...chatMessages, newUser] }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(err?.error || 'OpenAI proxy error');
+      }
+
+      const data = await resp.json();
+      const assistant = data?.choices?.[0]?.message?.content || data?.choices?.[0]?.text || '';
+      if (assistant) {
+        setChatMessages(prev => [...prev, { role: 'assistant', content: assistant }]);
+      } else if (data?.error) {
+        setChatMessages(prev => [...prev, { role: 'assistant', content: 'Erreur: ' + data.error }]);
+      }
+    } catch (err: any) {
+      setChatMessages(prev => [...prev, { role: 'assistant', content: 'Erreur: ' + (err.message || String(err)) }]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
+
   return (
     <div className="app-container">
       <div className="max-w-6xl mx-auto">
@@ -675,6 +714,41 @@ Règles importantes :
             <div className="w-40"></div>
           </div>
         </motion.div>
+
+        {/* ChatGPT pane */}
+        <div className="mb-6">
+          <Card className="card-improved">
+            <CardHeader>
+              <CardTitle>Chat avec GPT</CardTitle>
+              <CardDescription>Posez vos questions à l'assistant (model: gpt-3.5-turbo via server)</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3 max-h-48 overflow-y-auto p-2 bg-white/50 rounded">
+                {chatMessages.length === 0 ? (
+                  <div className="text-sm text-muted-foreground">Aucune conversation pour le moment.</div>
+                ) : (
+                  chatMessages.map((m, i) => (
+                    <div key={i} className={`p-2 rounded ${m.role === 'assistant' ? 'bg-slate-50' : 'bg-slate-100'} `}>
+                      <div className="text-xs text-muted-foreground">{m.role}</div>
+                      <div className="text-sm">{m.content}</div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="flex gap-2 mt-3">
+                <Input
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  placeholder="Écrivez un message pour GPT..."
+                />
+                <Button onClick={sendChatMessage} disabled={chatLoading || !chatInput.trim()}>
+                  {chatLoading ? 'En cours...' : 'Envoyer'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         <AnimatePresence mode="wait">
           {showClientList ? (
