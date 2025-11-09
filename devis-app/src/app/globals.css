@@ -120,3 +120,30 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* App-level component styles to make the UI look nicer */
+@layer components {
+  .app-container {
+    @apply min-h-screen bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 p-6;
+  }
+
+  .hero-title {
+    @apply text-4xl md:text-5xl font-extrabold text-slate-800 dark:text-slate-100;
+  }
+
+  .card-improved {
+    @apply bg-white dark:bg-slate-800 shadow-xl rounded-xl border border-gray-200 dark:border-slate-700;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400;
+  }
+
+  textarea, input {
+    @apply bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-300;
+  }
+
+  .table-devis th, .table-devis td {
+    @apply border border-black p-2 text-xs;
+  }
+}
