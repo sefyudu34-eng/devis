@@ -723,17 +723,17 @@ Règles importantes :
             </div>
 
             <div className="flex-1">
-              <div className="mx-auto inline-block bg-white dark:bg-slate-900 rounded-2xl px-8 py-6 shadow-2xl">
-                <div className="flex items-center gap-6">
+              <div style={{ maxWidth: 980, margin: '0 auto', background: '#fff', padding: 24, borderRadius: 18, boxShadow: '0 12px 30px rgba(0,0,0,0.08)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
                   <div>
-                    <h1 className="hero-title mb-1 text-4xl md:text-5xl">
+                    <h1 style={{ fontSize: 40, margin: 0, fontWeight: 800, lineHeight: 1.05 }}>
                       Générateur de Devis IA
                     </h1>
-                    <p className="text-sm md:text-base text-muted-foreground">
+                    <p style={{ marginTop: 6, fontSize: 14, color: '#6b7280' }}>
                       Créez des devis professionnels en parlant ou en écrivant
                     </p>
                   </div>
-                  <img src="/images/qualibat.png" alt="QUALIBAT" className="h-16 w-auto hidden md:block" />
+                  <img src="/images/qualibat.png" alt="QUALIBAT" style={{ height: 64, width: 'auto', display: 'block' }} />
                 </div>
               </div>
             </div>
