@@ -795,7 +795,8 @@ Règles importantes :
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="card-improved shadow-xl">
+              <div style={{ maxWidth: 980, margin: '0 auto', marginTop: 28, paddingLeft: 12, paddingRight: 12 }}>
+                <Card className="card-improved shadow-xl" style={{ padding: 20 }}>
                 <CardHeader>
                   <CardTitle className="text-2xl text-foreground">
                     Base de Données Clients
@@ -804,7 +805,7 @@ Règles importantes :
                     Recherchez un client par nom (texte ou voix)
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-6" style={{ paddingTop: 8 }}>
                   <div className="flex gap-3">
                     <Input
                       placeholder="Rechercher un client par nom..."
@@ -1010,6 +1011,7 @@ Règles importantes :
                   </Button>
                 </CardContent>
               </Card>
+              </div>
             </motion.div>
           ) : !devis ? (
             <motion.div
@@ -1083,6 +1085,8 @@ Règles importantes :
                       Agent IA
                     </Button>
                   </div>
+
+                  <div style={{ maxWidth: 820, margin: '0 auto' }}>
 
                   {conversationMode && (
                     <motion.div
@@ -1227,6 +1231,8 @@ Règles importantes :
                       </div>
                     </motion.div>
                   )}
+
+                  </div>
 
                   {error && (
                     <motion.div
