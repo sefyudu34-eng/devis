@@ -148,116 +148,235 @@ export default function AppDevisIA() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white p-6">
-      <div className="max-w-4xl mx-auto">
-        <Card className="shadow-lg">
-          <CardHeader className="text-center border-b pb-4 bg-gradient-to-r from-blue-600 to-blue-700">
-            <CardTitle className="text-2xl font-bold text-white mb-2">Assistant de création de devis</CardTitle>
-            <CardDescription className="text-lg text-slate-100">
-              Générez des devis rapidement avec l'aide de l'IA
-            </CardDescription>
-          </CardHeader>
+    <div style={{ 
+      minHeight: '100vh',
+      padding: '24px',
+      backgroundColor: '#f8fafc'
+    }}>
+      <div style={{
+        maxWidth: '800px',
+        margin: '0 auto',
+        backgroundColor: 'white',
+        borderRadius: '12px',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+      }}>
+        <div style={{
+          padding: '24px',
+          textAlign: 'center',
+          background: 'linear-gradient(to right, #2563eb, #1d4ed8)',
+          borderTopLeftRadius: '12px',
+          borderTopRightRadius: '12px',
+          color: 'white'
+        }}>
+          <h1 style={{
+            fontSize: '24px',
+            fontWeight: 'bold',
+            marginBottom: '8px'
+          }}>Assistant de création de devis</h1>
+          <p style={{
+            fontSize: '16px',
+            opacity: '0.9'
+          }}>Générez des devis rapidement avec l'aide de l'IA</p>
+        </div>
 
-          <CardContent className="p-6 space-y-6">
+          <div style={{ padding: '24px' }}>
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg text-center">
+              <div style={{
+                backgroundColor: '#fef2f2',
+                color: '#dc2626',
+                padding: '16px',
+                borderRadius: '8px',
+                textAlign: 'center',
+                marginBottom: '16px'
+              }}>
                 {error}
               </div>
             )}
 
             {/* Sélection du mode */}
-            <div className="flex justify-center gap-4">
-              <Button
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '16px',
+              marginBottom: '24px'
+            }}>
+              <button
                 onClick={() => setMode("text")}
-                variant={mode === "text" ? "default" : "outline"}
-                className="flex-1 max-w-[200px]"
+                style={{
+                  padding: '12px 24px',
+                  backgroundColor: mode === 'text' ? '#2563eb' : 'white',
+                  color: mode === 'text' ? 'white' : '#1f2937',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
               >
-                <MessageSquare className="w-4 h-4 mr-2" />
+                <MessageSquare size={16} />
                 Mode Texte
-              </Button>
-              <Button
+              </button>
+              <button
                 onClick={() => setMode("voice")}
-                variant={mode === "voice" ? "default" : "outline"}
-                className="flex-1 max-w-[200px]"
+                style={{
+                  padding: '12px 24px',
+                  backgroundColor: mode === 'voice' ? '#2563eb' : 'white',
+                  color: mode === 'voice' ? 'white' : '#1f2937',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
               >
-                <Mic className="w-4 h-4 mr-2" />
+                <Mic size={16} />
                 Mode Vocal
-              </Button>
+              </button>
             </div>
 
             {/* Zone de saisie */}
-            <div className="space-y-4">
+            <div style={{ marginBottom: '24px' }}>
               {mode === "text" ? (
-                <>
-                  <Textarea
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <textarea
                     placeholder="Décrivez le devis que vous souhaitez générer..."
                     value={textInput}
                     onChange={(e) => setTextInput(e.target.value)}
-                    className="min-h-[120px] text-center resize-none"
+                    style={{
+                      width: '100%',
+                      minHeight: '120px',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      border: '1px solid #e5e7eb',
+                      resize: 'none',
+                      textAlign: 'center'
+                    }}
                   />
-                  <Button
+                  <button
                     onClick={() => generateDevis(textInput)}
                     disabled={!textInput.trim() || isProcessing}
-                    className="w-full"
+                    style={{
+                      padding: '12px 24px',
+                      backgroundColor: (!textInput.trim() || isProcessing) ? '#9ca3af' : '#2563eb',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: (!textInput.trim() || isProcessing) ? 'not-allowed' : 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
                   >
-                    <Send className="w-4 h-4 mr-2" />
+                    <Send size={16} />
                     {isProcessing ? "Génération..." : "Générer"}
-                  </Button>
-                </>
+                  </button>
+                </div>
               ) : (
-                <Button
+                <button
                   onClick={isRecording ? stopRecording : startRecording}
                   disabled={isProcessing}
-                  variant={isRecording ? "destructive" : "default"}
-                  className="w-full"
+                  style={{
+                    width: '100%',
+                    padding: '12px 24px',
+                    backgroundColor: isRecording ? '#dc2626' : '#2563eb',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: isProcessing ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px'
+                  }}
                 >
                   {isRecording ? (
                     <>
-                      <MicOff className="w-4 h-4 mr-2" />
+                      <MicOff size={16} />
                       Arrêter l'enregistrement
                     </>
                   ) : (
                     <>
-                      <Mic className="w-4 h-4 mr-2" />
+                      <Mic size={16} />
                       Commencer l'enregistrement
                     </>
                   )}
-                </Button>
+                </button>
               )}
             </div>
 
             {/* Recherche de clients */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <Input
+            <div>
+              <div style={{ 
+                display: 'flex',
+                gap: '16px',
+                marginBottom: '16px'
+              }}>
+                <input
                   type="text"
                   placeholder="Rechercher un client..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1"
+                  style={{
+                    flex: 1,
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '1px solid #e5e7eb'
+                  }}
                 />
-                <Button
+                <button
                   onClick={() => setShowClientList(true)}
-                  variant="outline"
-                  size="icon"
+                  style={{
+                    padding: '12px',
+                    backgroundColor: 'white',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
                 >
-                  <FileText className="w-4 h-4" />
-                </Button>
+                  <FileText size={16} />
+                </button>
               </div>
 
               {showClientList && (
-                <div className="mt-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-                  <div className="p-4 flex justify-between items-center bg-gray-50 border-b border-gray-200">
-                    <h3 className="font-semibold text-gray-900">Liste des clients</h3>
-                    <Button
+                <div style={{
+                  backgroundColor: 'white',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  overflow: 'hidden',
+                  marginTop: '8px'
+                }}>
+                  <div style={{
+                    padding: '16px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    backgroundColor: '#f9fafb',
+                    borderBottom: '1px solid #e5e7eb'
+                  }}>
+                    <h3 style={{ fontWeight: '600', color: '#1f2937' }}>Liste des clients</h3>
+                    <button
                       onClick={() => setShowClientList(false)}
-                      variant="ghost"
-                      size="icon"
+                      style={{
+                        padding: '8px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: '#6b7280'
+                      }}
                     >
                       ✕
-                    </Button>
+                    </button>
                   </div>
-                  <div className="max-h-[300px] overflow-y-auto">
+                  <div style={{
+                    maxHeight: '300px',
+                    overflowY: 'auto'
+                  }}>
                     {clients
                       .filter((client) =>
                         client.nom.toLowerCase().includes(searchQuery.toLowerCase())
@@ -265,15 +384,19 @@ export default function AppDevisIA() {
                       .map((client) => (
                         <div
                           key={client.id}
-                          className="p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-none"
+                          style={{
+                            padding: '16px',
+                            borderBottom: '1px solid #e5e7eb',
+                            cursor: 'pointer'
+                          }}
                           onClick={() => {
                             setSelectedClient(client);
                             setShowClientList(false);
                           }}
                         >
-                          <div className="font-medium text-gray-900">{client.nom}</div>
-                          <div className="text-sm text-gray-500">{client.email}</div>
-                          <div className="text-xs text-gray-400 mt-1">
+                          <div style={{ fontWeight: '500', color: '#1f2937' }}>{client.nom}</div>
+                          <div style={{ fontSize: '14px', color: '#6b7280' }}>{client.email}</div>
+                          <div style={{ fontSize: '12px', color: '#9ca3af', marginTop: '4px' }}>
                             {client.devis.length} devis, {client.factures.length} factures
                           </div>
                         </div>
@@ -283,26 +406,44 @@ export default function AppDevisIA() {
               )}
 
               {selectedClient && (
-                <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <div className="flex justify-between items-start">
+                <div style={{
+                  marginTop: '16px',
+                  padding: '16px',
+                  backgroundColor: '#eff6ff',
+                  borderRadius: '8px',
+                  border: '1px solid #2563eb'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'start'
+                  }}>
                     <div>
-                      <h3 className="font-semibold text-blue-900">{selectedClient.nom}</h3>
-                      <p className="text-sm text-blue-700">{selectedClient.email}</p>
-                      <p className="text-sm text-blue-700 mt-1">{selectedClient.adresse}</p>
+                      <h3 style={{ fontWeight: '600', color: '#1e3a8a' }}>{selectedClient.nom}</h3>
+                      <p style={{ fontSize: '14px', color: '#1d4ed8' }}>{selectedClient.email}</p>
+                      <p style={{ fontSize: '14px', color: '#1d4ed8', marginTop: '4px' }}>{selectedClient.adresse}</p>
                     </div>
-                    <Button
+                    <button
                       onClick={() => setSelectedClient(null)}
-                      variant="ghost"
-                      size="icon"
-                      className="text-blue-700 hover:text-blue-800"
+                      style={{
+                        padding: '8px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: '#1d4ed8'
+                      }}
                     >
                       ✕
-                    </Button>
+                    </button>
                   </div>
                 </div>
               )}
             </div>
-          </CardContent>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
         </Card>
       </div>
     </div>
