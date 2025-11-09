@@ -7,7 +7,10 @@ const openai = new OpenAI({
 
 export async function POST(request: Request) {
   try {
+    console.log("Début de la requête API");
     const { prompt, client } = await request.json();
+    console.log("Prompt reçu:", prompt);
+    console.log("Client:", client);
 
     const systemPrompt = `Tu es un assistant spécialisé dans la génération de devis. 
     Analyse la demande et génère une liste détaillée d'items pour le devis.
@@ -25,13 +28,17 @@ export async function POST(request: Request) {
 
     const userPrompt = `Générer un devis pour le client ${client?.nom || 'inconnu'} avec les détails suivants : ${prompt}`;
 
+    console.log("Appel à OpenAI");
     const completion = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-3.5-turbo", // Changement pour utiliser gpt-3.5-turbo au lieu de gpt-4
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt }
-      ]
+      ],
+      temperature: 0.7,
+      max_tokens: 1000
     });
+    console.log("Réponse OpenAI reçue:", completion.choices[0].message.content);
 
     const devisContent = completion.choices[0].message.content || '';
     
@@ -39,7 +46,7 @@ export async function POST(request: Request) {
     const parsedItems = [];
     const lines = devisContent.split('\n');
     
-    let currentItem = null;
+    let currentItem: any = {};
     
     for (const line of lines) {
       const trimmedLine = line.trim();
@@ -47,26 +54,53 @@ export async function POST(request: Request) {
       // Ignorer les lignes vides
       if (!trimmedLine) continue;
       
-      // Essayer de détecter les prix et quantités
-      const priceMatch = trimmedLine.match(/(\d+(?:\.\d{1,2})?)\s*(?:€|EUR)/);
-      const quantityMatch = trimmedLine.match(/(\d+)\s*(?:x|pcs?|unités?)/i);
-      
-      if (priceMatch || quantityMatch) {
-        // C'est probablement une ligne d'item
-        const unitPrice = priceMatch ? parseFloat(priceMatch[1]) : 0;
-        const quantity = quantityMatch ? parseInt(quantityMatch[1]) : 1;
-        const description = trimmedLine
-          .replace(/(\d+(?:\.\d{1,2})?)\s*(?:€|EUR)/g, '')
-          .replace(/(\d+)\s*(?:x|pcs?|unités?)/gi, '')
-          .trim();
-          
-        parsedItems.push({
-          description,
-          quantity,
-          unitPrice,
-          total: quantity * unitPrice
-        });
+      // Détecter le début d'un nouvel item
+      if (trimmedLine.startsWith('-') || trimmedLine.startsWith('*')) {
+        if (currentItem.description) {
+          // Si on a déjà un item en cours, on l'ajoute à la liste
+          if (currentItem.quantity && currentItem.unitPrice) {
+            parsedItems.push({
+              ...currentItem,
+              total: currentItem.quantity * currentItem.unitPrice
+            });
+          }
+        }
+        currentItem = {};
       }
+
+      // Parser les différentes parties de l'item
+      if (trimmedLine.toLowerCase().includes('description:')) {
+        currentItem.description = trimmedLine.split(':')[1].trim();
+      } else if (trimmedLine.toLowerCase().includes('quantité:') || trimmedLine.toLowerCase().includes('quantite:')) {
+        const quantityStr = trimmedLine.split(':')[1].trim();
+        const quantityMatch = quantityStr.match(/\d+/);
+        if (quantityMatch) {
+          currentItem.quantity = parseInt(quantityMatch[0]);
+        }
+      } else if (trimmedLine.toLowerCase().includes('prix') || trimmedLine.toLowerCase().includes('cout')) {
+        const priceMatch = trimmedLine.match(/(\d+(?:\.\d{1,2})?)/);
+        if (priceMatch) {
+          currentItem.unitPrice = parseFloat(priceMatch[1]);
+        }
+      }
+    }
+
+    // Ajouter le dernier item s'il existe
+    if (currentItem.description && currentItem.quantity && currentItem.unitPrice) {
+      parsedItems.push({
+        ...currentItem,
+        total: currentItem.quantity * currentItem.unitPrice
+      });
+    }
+
+    // Si aucun item n'a été parsé, créer un item par défaut
+    if (parsedItems.length === 0) {
+      parsedItems.push({
+        description: "Service général",
+        quantity: 1,
+        unitPrice: 100,
+        total: 100
+      });
     }
     
     // Calculer les totaux

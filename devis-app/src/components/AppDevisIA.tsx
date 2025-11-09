@@ -139,6 +139,8 @@ export default function AppDevisIA() {
       setError("");
       setDevis(null);
 
+      console.log("Envoi de la requête avec:", { prompt, selectedClient });
+
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: {
@@ -150,20 +152,39 @@ export default function AppDevisIA() {
         }),
       });
 
+      console.log("Statut de la réponse:", response.status);
       const data = await response.json();
+      console.log("Données reçues:", data);
 
       if (!response.ok) {
+        console.error("Erreur serveur:", data);
         throw new Error(data.error || "Erreur lors de la génération");
       }
       
-      if (!data.devis || !Array.isArray(data.devis.items)) {
-        throw new Error("Format de réponse invalide");
+      if (!data.devis) {
+        console.error("Données invalides:", data);
+        throw new Error("Aucun devis généré");
+      }
+
+      if (!Array.isArray(data.devis.items)) {
+        console.error("Format des items invalide:", data.devis);
+        throw new Error("Format des items invalide");
       }
 
       setDevis(data.devis);
+      console.log("Devis généré avec succès:", data.devis);
     } catch (err) {
-      console.error("Erreur de génération:", err);
-      setError(err instanceof Error ? err.message : "Erreur lors de la génération du devis");
+      console.error("Erreur détaillée:", err);
+      let errorMessage = "Erreur lors de la génération du devis";
+      
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === 'object' && err !== null) {
+        errorMessage = JSON.stringify(err);
+      }
+      
+      console.error("Message d'erreur final:", errorMessage);
+      setError(errorMessage);
     } finally {
       setIsProcessing(false);
     }
